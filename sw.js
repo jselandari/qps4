@@ -10,7 +10,7 @@
    para forzar la actualización en el celular del usuario.
    ============================================================ */
 
-const CACHE  = "qps4-v1";
+const CACHE  = "qps4-v2";
 const ASSETS = [
   "./",
   "./index.html",
