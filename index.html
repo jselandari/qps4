@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#5f8a8b" />
+  <meta name="description" content="Score rápido de screening de shock séptico pediátrico (qPS4), 0-4 puntos. AR-UCIP." />
+  <title>qPS4 · Score de Screening de Shock Séptico Pediátrico</title>
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" href="icon-192.png" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <img src="icon-192.png" alt="ARUCIP" class="logo" />
+      <div>
+        <h1>qPS4 · Screening de Shock Séptico</h1>
+        <p>Quick Pediatric Septic Shock Screening Score · UCIP</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- PASO 1: Edad -->
+    <section class="card">
+      <h2><span class="num">1</span>Edad del paciente</h2>
+      <div class="field">
+        <label for="edad">Rango etario</label>
+        <select id="edad">
+          <option value="">— Seleccioná el rango —</option>
+          <option value="1m_11m">1 mes – 11 meses</option>
+          <option value="1a_2a">1 año – 2 años</option>
+          <option value="3a_5a">3 años – 5 años</option>
+          <option value="6a_11a">6 años – 11 años</option>
+          <option value="12a_17a">12 años – 17 años</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- PASO 2: Sensorio -->
+    <section class="card">
+      <h2><span class="num">2</span>Estado mental</h2>
+      <div class="field">
+        <label for="mentacion">Sensorial / conciencia</label>
+        <select id="mentacion">
+          <option value="">— Seleccioná —</option>
+          <option value="0">Alerta o Glasgow = 15</option>
+          <option value="1">No alerta o Glasgow &lt; 15</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- PASO 3: FR -->
+    <section class="card">
+      <h2><span class="num">3</span>Frecuencia respiratoria</h2>
+      <div class="field">
+        <label for="fr">FR (respiraciones por minuto)</label>
+        <input type="number" id="fr" inputmode="numeric" min="0" max="120" placeholder="Ej: 38" />
+        <div class="hint" id="frHint">Seleccioná primero el rango etario.</div>
+        <div class="error" id="frError">Ingresá un valor válido.</div>
+      </div>
+    </section>
+
+    <!-- PASO 4: TAMSI -->
+    <section class="card">
+      <h2><span class="num">4</span>TAMSI · Índice de shock</h2>
+      <p class="hint" style="margin-bottom:12px">
+        Fórmula: <strong>TAMSI = [FC − 10 × (T° axilar − 37)] / TAM</strong><br />
+        La temperatura se ingresa <strong>axilar</strong>, tal como se mide en la emergencia. Se usa el valor tal cual, sin corrección.
+      </p>
+
+      <div class="row">
+        <div class="field">
+          <label for="fc">FC (latidos/min)</label>
+          <input type="number" id="fc" inputmode="numeric" min="0" max="300" placeholder="Ej: 140" />
+        </div>
+        <div class="field">
+          <label for="tam">TAM (mmHg)</label>
+          <input type="number" id="tam" inputmode="numeric" min="0" max="200" placeholder="Ej: 65" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="temperatura">Temperatura axilar (°C)</label>
+        <input type="number" id="temperatura" inputmode="decimal" step="0.1" min="30" max="43" placeholder="Ej: 38.5" />
+        <div class="hint">Ingresá la temperatura axilar sin correcciones. Se usa directamente en la fórmula del TAMSI.</div>
+      </div>
+
+      <div class="tamsi-box" id="tamsiBox">
+        <div class="label">TAMSI calculado</div>
+        <div class="value" id="tamsiValue">—</div>
+        <div class="cut" id="tamsiCut">Ingresá FC, TAM y temperatura axilar</div>
+      </div>
+    </section>
+
+    <!-- PASO 5: Relleno capilar -->
+    <section class="card">
+      <h2><span class="num">5</span>Relleno capilar</h2>
+      <div class="field">
+        <label for="relleno">Tiempo de relleno capilar</label>
+        <select id="relleno">
+          <option value="">— Seleccioná —</option>
+          <option value="0">&lt; 3 segundos</option>
+          <option value="1">≥ 3 segundos</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- RESULTADO -->
+    <section class="card card-flat">
+      <div class="total-box">
+        <div class="label">Score qPS4 total</div>
+        <div class="score" id="totalScore">—</div>
+        <div class="interp" id="totalInterp">Completá todos los campos</div>
+      </div>
+    </section>
+
+    <!-- CRITERIOS -->
+    <section class="card">
+      <h2>📋 Detalle de criterios</h2>
+      <ul class="criteria-list" id="criteriaList">
+        <li><span class="name">Estado mental</span><span class="score" id="cMent">—</span></li>
+        <li><span class="name">Frecuencia respiratoria</span><span class="score" id="cFR">—</span></li>
+        <li><span class="name">TAMSI</span><span class="score" id="cTAMSI">—</span></li>
+        <li><span class="name">Relleno capilar</span><span class="score" id="cRelleno">—</span></li>
+      </ul>
+      <button class="btn ghost" id="resetBtn" type="button">↺ Reiniciar</button>
+    </section>
+
+    <!-- REFERENCIA -->
+    <section class="card">
+      <details>
+        <summary>📖 Valores de corte por rango etario (referencia)</summary>
+        <div class="ref">
+          <strong>Frecuencia respiratoria (score = 1 si &gt; corte):</strong><br />
+          · 1 m – 11 m: &gt; 55<br />
+          · 1 a – 2 a: &gt; 47<br />
+          · 3 a – 5 a: &gt; 33<br />
+          · 6 a – 11 a: &gt; 25<br />
+          · 12 a – 17 a: &gt; 21<br /><br />
+          <strong>TAMSI (score = 1 si &gt; corte):</strong><br />
+          · 1 m – 11 m: &gt; 2,64<br />
+          · 1 a – 2 a: &gt; 2,29<br />
+          · 3 a – 5 a: &gt; 1,96<br />
+          · 6 a – 11 a: &gt; 1,68<br />
+          · 12 a – 17 a: &gt; 1,54
+        </div>
+      </details>
+      <p class="ref" style="margin-top:12px">
+        <strong>Fuente:</strong> Supplemental Table 1a. Score criteria for the quick Pediatric Septic Shock Screening Score (qPS4), range 0–4. <em>Pediatrics</em> 2025; DOI: 10.1542/peds.2025-071155
+      </p>
+    </section>
+
+    <p class="disclaimer">
+      <strong>Aviso:</strong> Herramienta de apoyo al screening clínico. No reemplaza el juicio médico ni la evaluación integral del paciente. Verificá siempre los valores ingresados y la indicación antes de tomar decisiones.
+      <br /><br />
+      Desarrollado para <strong>AR-UCIP</strong> · Argentina UCIP
+    </p>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
